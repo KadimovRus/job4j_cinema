@@ -14,5 +14,9 @@ public interface TicketRepository {
 
     Collection<TicketDto> findAll();
 
+    Collection<TicketDto> findAllBySessionId(int sessionId);
+
     boolean deleteById(int id);
+
+    TicketDto findByRowAndPlaceAndSession(Integer row, Integer place, Integer sessionId);
 }

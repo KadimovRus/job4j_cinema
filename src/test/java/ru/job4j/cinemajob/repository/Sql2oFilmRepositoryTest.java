@@ -5,10 +5,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cinemajob.configuration.DatasourceConfiguration;
-import ru.job4j.cinemajob.converter.FilmConverter;
+import ru.job4j.cinemajob.dto.FilmDto;
 import ru.job4j.cinemajob.model.File;
 import ru.job4j.cinemajob.model.Film;
 import ru.job4j.cinemajob.model.Genre;
+import ru.job4j.cinemajob.repository.impl.Sql2oFileRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFilmRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oGenreRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,7 +73,7 @@ public class Sql2oFilmRepositoryTest {
         var savedFilm = sql2oFilmRepository.findById(film.getId());
         assertThat(savedFilm.get())
                 .usingRecursiveComparison()
-                .isEqualTo(FilmConverter.convertFilmToFilmDto(film, genre));
+                .isEqualTo(new FilmDto(film, genre));
     }
 
     @Test
@@ -79,9 +82,9 @@ public class Sql2oFilmRepositoryTest {
         var film2 = sql2oFilmRepository.save(new Film("name2", "description2", 2022, genre.getId(), 11, 110, file.getId()));
         var film3 = sql2oFilmRepository.save(new Film("name3", "description3", 2021, genre.getId(), 16, 115, file.getId()));
         var result = sql2oFilmRepository.findAll();
-        assertThat(result).isEqualTo(List.of(FilmConverter.convertFilmToFilmDto(film1, genre),
-                FilmConverter.convertFilmToFilmDto(film2, genre),
-                FilmConverter.convertFilmToFilmDto(film3, genre)));
+        assertThat(result).isEqualTo(List.of(new FilmDto(film1, genre),
+                new FilmDto(film2, genre),
+                new FilmDto(film3, genre)));
     }
 
     @Test
@@ -116,7 +119,7 @@ public class Sql2oFilmRepositoryTest {
         var isUpdated = sql2oFilmRepository.update(updatedFilm);
         var savedFilm = sql2oFilmRepository.findById(film.getId());
         assertThat(isUpdated).isTrue();
-        assertThat(FilmConverter.convertFilmToFilmDto(updatedFilm, genre)).usingRecursiveComparison().isEqualTo(savedFilm.get());
+        assertThat(new FilmDto(updatedFilm, genre)).usingRecursiveComparison().isEqualTo(savedFilm.get());
     }
 
     @Test

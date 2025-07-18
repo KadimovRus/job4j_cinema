@@ -2,49 +2,44 @@ package ru.job4j.cinemajob.dto;
 
 import ru.job4j.cinemajob.model.Film;
 import ru.job4j.cinemajob.model.FilmSession;
-import ru.job4j.cinemajob.model.Genre;
 import ru.job4j.cinemajob.model.Hall;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class FilmSessionDto {
-    public static final Map<String, String> COLUMN_MAPPING = new HashMap<>();
-
-    static {
-        COLUMN_MAPPING.put("id", "id");
-        COLUMN_MAPPING.put("film_name", "filmName");
-        COLUMN_MAPPING.put("hall_name", "hallName");
-        COLUMN_MAPPING.put("start_time", "startTime");
-        COLUMN_MAPPING.put("end_time", "endTime");
-        COLUMN_MAPPING.put("price", "price");
-    }
-
-    public FilmSessionDto(int id, Film film, Hall hall, LocalDateTime startTime, LocalDateTime endTime, int price) {
-        this.id = id;
-        this.filmName = film.getName();
-        this.hallName = hall.getName();
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.price = price;
-    }
+    public static final Map<String, String> COLUMN_MAPPING = Map.of(
+        "id", "id",
+        "film_name", "filmName",
+        "film_id", "filmId",
+        "file_id", "fileId",
+        "hall_name", "hallName",
+        "start_time", "startTime",
+        "end_time", "endTime",
+        "row_count", "rowCount",
+        "place_count", "placeCount",
+        "price", "price"
+    );
 
     private int id;
     private String filmName;
+    private int fileId;
+    private int filmId;
     private String hallName;
+    private Integer rowCount;
+    private Integer placeCount;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int price;
 
-    public FilmSessionDto() {
-    }
-
     public FilmSessionDto(FilmSession filmSession, Film film, Hall hall) {
         this.id = filmSession.getId();
         this.filmName = film.getName();
+        this.fileId = film.getFileId();
         this.hallName = hall.getName();
+        this.rowCount = hall.getRowCount();
+        this.placeCount = hall.getPlaceCount();
         this.startTime = filmSession.getStartTime();
         this.endTime = filmSession.getEndTime();
         this.price = filmSession.getPrice();
@@ -98,6 +93,38 @@ public class FilmSessionDto {
         this.price = price;
     }
 
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
+    }
+
+    public int getRowCount() {
+        return this.rowCount;
+    }
+
+    public void setRowCount(int rowCount) {
+        this.rowCount = rowCount;
+    }
+
+    public int getPlaceCount() {
+        return this.placeCount;
+    }
+
+    public void setPlaceCount(int placeCount) {
+        this.placeCount = placeCount;
+    }
+
+    public int getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(int filmId) {
+        this.filmId = filmId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,6 +148,8 @@ public class FilmSessionDto {
                 + "id=" + id
                 + ", filmName='" + filmName + '\''
                 + ", hallName='" + hallName + '\''
+                + ", rowCount=" + this.rowCount
+                + ", placeCount=" + this.placeCount
                 + ", startTime=" + startTime
                 + ", endTime=" + endTime
                 + ", price=" + price

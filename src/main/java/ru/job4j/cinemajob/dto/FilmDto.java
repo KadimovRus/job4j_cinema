@@ -1,5 +1,6 @@
 package ru.job4j.cinemajob.dto;
 
+import ru.job4j.cinemajob.model.Film;
 import ru.job4j.cinemajob.model.Genre;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class FilmDto {
         COLUMN_MAPPING.put("genre", "genre");
         COLUMN_MAPPING.put("minimal_age", "minimalAge");
         COLUMN_MAPPING.put("duration_in_minutes", "durationInMinutes");
+        COLUMN_MAPPING.put("file_id", "fileId");
     }
 
     private int id;
@@ -27,17 +29,17 @@ public class FilmDto {
     private String genre;
     private int minimalAge;
     private int durationInMinutes;
+    private int fileId;
 
-    public FilmDto(int id, String name, String description,
-                   int releaseYear, Genre genre, int minimalAge,
-                   int durationInMinutes) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseYear = releaseYear;
+    public FilmDto(Film film, Genre genre) {
+        this.id = film.getId();
+        this.name = film.getName();
+        this.description = film.getDescription();
+        this.releaseYear = film.getReleaseYear();
         this.genre = genre.getName();
-        this.minimalAge = minimalAge;
-        this.durationInMinutes = durationInMinutes;
+        this.minimalAge = film.getMinimalAge();
+        this.durationInMinutes = film.getDurationInMinutes();
+        this.fileId = film.getFileId();
     }
 
     public int getId() {
@@ -96,9 +98,16 @@ public class FilmDto {
         this.durationInMinutes = durationInMinutes;
     }
 
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
+    }
+
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }
@@ -106,9 +115,10 @@ public class FilmDto {
             return false;
         }
         FilmDto filmDto = (FilmDto) o;
-        return getId() == filmDto.getId() && getReleaseYear() == filmDto.getReleaseYear()
+        return getReleaseYear() == filmDto.getReleaseYear()
                 && getMinimalAge() == filmDto.getMinimalAge()
                 && getDurationInMinutes() == filmDto.getDurationInMinutes()
+                && getFileId() == filmDto.getFileId()
                 && Objects.equals(getName(), filmDto.getName())
                 && Objects.equals(getDescription(), filmDto.getDescription())
                 && Objects.equals(getGenre(), filmDto.getGenre());
@@ -116,10 +126,8 @@ public class FilmDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(),
-                getDescription(), getReleaseYear(),
-                getGenre(), getMinimalAge(),
-                getDurationInMinutes());
+        return Objects.hash(getName(), getDescription(), getReleaseYear(),
+                getGenre(), getMinimalAge(), getDurationInMinutes(), getFileId());
     }
 
     @Override

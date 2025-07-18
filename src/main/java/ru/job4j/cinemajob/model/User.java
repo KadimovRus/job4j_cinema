@@ -20,6 +20,10 @@ public class User {
     private String email;
     private String password;
 
+    public User() {
+
+    }
+
     public User(int id, String fullName, String email, String password) {
         this.id = id;
         this.fullName = fullName;

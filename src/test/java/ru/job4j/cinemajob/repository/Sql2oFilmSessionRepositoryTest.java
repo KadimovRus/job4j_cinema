@@ -5,13 +5,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cinemajob.configuration.DatasourceConfiguration;
-import ru.job4j.cinemajob.converter.FilmSessionConverter;
 import ru.job4j.cinemajob.dto.FilmSessionDto;
 import ru.job4j.cinemajob.model.File;
 import ru.job4j.cinemajob.model.Film;
 import ru.job4j.cinemajob.model.FilmSession;
 import ru.job4j.cinemajob.model.Genre;
 import ru.job4j.cinemajob.model.Hall;
+import ru.job4j.cinemajob.repository.impl.Sql2oFileRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFilmRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFilmSessionRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oGenreRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oHallRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -57,9 +61,9 @@ public class Sql2oFilmSessionRepositoryTest {
         sql2oFileRepository = new Sql2oFileRepository(sql2o);
         sql2oGenreRepository = new Sql2oGenreRepository(sql2o);
 
-        file = new File("test2", "test2");
+        file = new File("test7", "test7");
         sql2oFileRepository.save(file);
-        genre = sql2oGenreRepository.save(new Genre(12, "Comedy2"));
+        genre = sql2oGenreRepository.save(new Genre(7, "Comedy7"));
         hall = sql2oHallRepository.save(new Hall("hall", 3, 4, "description"));
         film = sql2oFilmRepository.save(new Film("name", "description", 2023, genre.getId(),
                 12, 120, file.getId()));
@@ -85,7 +89,7 @@ public class Sql2oFilmSessionRepositoryTest {
     public void whenSaveThenGetSame() {
         var filmSession = sql2oFilmSessionRepository.save(new FilmSession(film.getId(), hall.getId(), startTime, endTime, 200));
         var savedFilmSession = sql2oFilmSessionRepository.findById(filmSession.getId());
-        assertThat(savedFilmSession.get()).isEqualTo(FilmSessionConverter.convertFilmSessionToFilmSessionDto(filmSession, film, hall));
+        assertThat(savedFilmSession.get()).isEqualTo(new FilmSessionDto(filmSession, film, hall));
     }
 
     @Test
@@ -94,9 +98,9 @@ public class Sql2oFilmSessionRepositoryTest {
         var filmSession2 = sql2oFilmSessionRepository.save(new FilmSession(film.getId(), hall.getId(), startTime.plusHours(2), endTime.plusHours(2), 200));
         var filmSession3 = sql2oFilmSessionRepository.save(new FilmSession(film.getId(), hall.getId(), startTime.plusHours(4), endTime.plusHours(4), 200));
         var result = sql2oFilmSessionRepository.findAll();
-        assertThat(result).isEqualTo(List.of(FilmSessionConverter.convertFilmSessionToFilmSessionDto(filmSession1, film, hall),
-                                             FilmSessionConverter.convertFilmSessionToFilmSessionDto(filmSession2, film, hall),
-                                             FilmSessionConverter.convertFilmSessionToFilmSessionDto(filmSession3, film, hall)));
+        assertThat(result).isEqualTo(List.of(new FilmSessionDto(filmSession1, film, hall),
+                                             new FilmSessionDto(filmSession2, film, hall),
+                                             new FilmSessionDto(filmSession3, film, hall)));
     }
 
     @Test

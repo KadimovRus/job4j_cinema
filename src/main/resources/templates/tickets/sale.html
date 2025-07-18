@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!--  Зависимости Bootstrap-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <title>Продажа билета</title>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <header th:insert="blocks/header :: header"></header>
+    <div class="container">
+        <h3 class="mt-3">Продажа билета</h3>
+        <form th:action="@{/tickets/sale}" method="post" enctype="multipart/form-data">
+            <div class="mb-3" th:if="${error}">
+                <p class="text-danger" th:text="${error}"></p>
+            </div>
+            <div class="row my-4">
+                <div class="col-4">
+                    <img th:src="@{'/files/' + ${infoSession.filmId}}" alt="No image" width="300">
+                </div>
+                <div class="col-5">
+
+                    <h3 th:text = "${infoSession.hallName}"> </h3>
+                    <input type="hidden" name="sessionId" th:value="${infoSession.id}">
+
+                    <p><h4 th:text = "${#temporals.format(infoSession.startTime, 'dd.MM.yyyy HH:mm')}"></h4></p>
+
+                    <h4>Схема зала</h4>
+                    <br>
+                    <div style="margin-bottom: 30px; vertical-align: center; justify-content: center; horiz-align: center">
+                        <div style="display: inline-block; background: green; border-radius: 10px; height: 20px; width: 20px; margin-right: 5px">
+                        </div>
+                        <div style="display: inline-block; height: 20px; justify-content:center; line-height: 15px">
+                            -место свободно
+                        </div>
+                        <div style="display: inline-block; background: darkgrey; border-radius: 10px; height: 20px; width: 20px; justify-content: space-between">
+                        </div>
+                        <div style="display: inline-block; height: 20px; justify-content:center; line-height: 15px">
+                            -место занято
+                        </div>
+                    </div>
+                    <div>
+                        <div th:each="i, seq : ${placesInHall}">
+                            <div th:text="${seq.index + 1}" style="display: inline-block; margin: 5px"></div>
+                            <div style="display: inline-block;  height: 20px; width: 20px; align-items: center; margin: 5px" th:each="j, seq2 : ${i}">
+                                <div th:if="${j == 0}"
+                                     style="background: green; border-radius: 10px; height: 20px; width: 20px; text-align: center; align-items: center; line-height: 17px"
+                                     th:text="${seq2.index + 1}">
+                                </div>
+                                <div th:unless="${j == 0}"
+                                     style="background: darkgrey; border-radius: 10px; height: 20px; width: 20px; text-align: center; align-items: center; line-height: 17px"
+                                     th:text="${seq2.index + 1}">
+                                </div>
+                            </div>
+                            <div th:text="${seq.index + 1}" style="display: inline-block; margin: 5px"></div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        <div>Ряд:
+                            <label>
+                                <select name="rowNumber">
+                                    <option th:each="i: ${#numbers.sequence(1, infoSession.rowCount)}" th:value="${i}" th:text="${i}">
+                                    </option>
+                                </select>
+                            </label>
+                            Место:
+                            <label>
+                                <select name="placeNumber">
+                                    <option th:each="i: ${#numbers.sequence(1, infoSession.placeCount)}" th:value="${i}" th:text="${i}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                        <br>
+                        <div>
+                            <button type="submit">Купить</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

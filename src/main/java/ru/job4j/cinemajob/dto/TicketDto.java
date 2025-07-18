@@ -5,7 +5,6 @@ import ru.job4j.cinemajob.model.Hall;
 import ru.job4j.cinemajob.model.Ticket;
 import ru.job4j.cinemajob.model.User;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +29,10 @@ public class TicketDto {
     private String hallName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    public TicketDto() {
+
+    }
 
     public TicketDto(Ticket ticket, User user, Hall hall, FilmSession filmSession) {
         this.id = ticket.getId();
@@ -96,6 +99,7 @@ public class TicketDto {
     public void setHallName(String hallName) {
         this.hallName = hallName;
     }
+
 
     @Override
     public boolean equals(Object o) {

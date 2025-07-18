@@ -5,13 +5,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cinemajob.configuration.DatasourceConfiguration;
 import ru.job4j.cinemajob.model.User;
+import ru.job4j.cinemajob.repository.impl.Sql2oUserRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Sql2oUserRepositoryTest {
@@ -43,14 +43,14 @@ public class Sql2oUserRepositoryTest {
     }
 
     @Test
-    public void whenSaveThenGetSame() {
+    void whenSaveThenGetSame() {
         var user = sql2oUserRepository.save(new User(0, "name", "email", "password")).get();
         var savedUser = sql2oUserRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()).get();
         assertThat(savedUser).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
-    public void whenSaveSeveralThenGetAll() {
+    void whenSaveSeveralThenGetAll() {
         var user1 = sql2oUserRepository.save(new User(0, "name", "email", "password")).get();
         var user2 = sql2oUserRepository.save(new User(0, "name1", "email1", "password1")).get();
         var user3 = sql2oUserRepository.save(new User(0, "name2", "email2", "password2")).get();
@@ -59,13 +59,13 @@ public class Sql2oUserRepositoryTest {
     }
 
     @Test
-    public void whenDontSaveThenNothingFound() {
+    void whenDontSaveThenNothingFound() {
         assertThat(sql2oUserRepository.findAll()).isEqualTo(emptyList());
-        assertThat(sql2oUserRepository.findByEmailAndPassword("email", "password")).isEqualTo(empty());
+        assertThat(sql2oUserRepository.findByEmailAndPassword("email", "password")).isEmpty();
     }
 
     @Test
-    public void whenSaveUserWithDuplicateEmailThenFail() {
+    void whenSaveUserWithDuplicateEmailThenFail() {
         User user1 = new User(0, "user1", "user@gmail.com", "password");
         User user2 = new User(0, "user2", "user@gmail.com", "password");
         sql2oUserRepository.save(user1);
@@ -74,17 +74,17 @@ public class Sql2oUserRepositoryTest {
     }
 
     @Test
-    public void whenDeleteThenGetEmptyOptional() {
+    void whenDeleteThenGetEmptyOptional() {
         var user = sql2oUserRepository.save(new User(
                 0, "name", "email", "password")).get();
         var isDeleted = sql2oUserRepository.deleteById(user.getId());
         var savedUser = sql2oUserRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
         assertThat(isDeleted).isTrue();
-        assertThat(savedUser).isEqualTo(empty());
+        assertThat(savedUser).isEmpty();
     }
 
     @Test
-    public void whenDeleteByInvalidIdThenGetFalse() {
+    void whenDeleteByInvalidIdThenGetFalse() {
         assertThat(sql2oUserRepository.deleteById(0)).isFalse();
     }
 }

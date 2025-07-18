@@ -13,6 +13,13 @@ import ru.job4j.cinemajob.model.Genre;
 import ru.job4j.cinemajob.model.Hall;
 import ru.job4j.cinemajob.model.Ticket;
 import ru.job4j.cinemajob.model.User;
+import ru.job4j.cinemajob.repository.impl.Sql2TicketRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFileRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFilmRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oFilmSessionRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oGenreRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oHallRepository;
+import ru.job4j.cinemajob.repository.impl.Sql2oUserRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -92,14 +99,14 @@ public class Sql2TicketRepositoryTest {
     }
 
     @Test
-    public void whenSaveThenGetSame() {
+    void whenSaveThenGetSame() {
         var ticket = sql2TicketRepository.save(new Ticket(filmSession.getId(), 1, 1, user.getId()));
         var savedTicket = sql2TicketRepository.findById(ticket.getId());
         assertThat(savedTicket.get()).isEqualTo(new TicketDto(ticket, user, hall, filmSession));
     }
 
     @Test
-    public void whenSaveSeveralThenGetAll() {
+    void whenSaveSeveralThenGetAll() {
         var ticket1 = sql2TicketRepository.save(new Ticket(filmSession.getId(), 1, 1, user.getId()));
         var ticket2 = sql2TicketRepository.save(new Ticket(filmSession.getId(), 2, 4, user.getId()));
         var ticket3 = sql2TicketRepository.save(new Ticket(filmSession.getId(), 3, 5, user.getId()));
@@ -110,13 +117,13 @@ public class Sql2TicketRepositoryTest {
     }
 
     @Test
-    public void whenDontSaveThenNothingFound() {
+    void whenDontSaveThenNothingFound() {
         assertThat(sql2TicketRepository.findAll()).isEqualTo(emptyList());
         assertThat(sql2TicketRepository.findById(0)).isEqualTo(empty());
     }
 
     @Test
-    public void whenDeleteThenGetEmptyOptional() {
+    void whenDeleteThenGetEmptyOptional() {
         var ticket = sql2TicketRepository.save(new Ticket(filmSession.getId(), 2, 4, user.getId()));
         var isDeleted = sql2TicketRepository.deleteById(ticket.getId());
         var savedTicket = sql2TicketRepository.findById(ticket.getId());
@@ -125,7 +132,7 @@ public class Sql2TicketRepositoryTest {
     }
 
     @Test
-    public void whenDeleteByInvalidIdThenGetFalse() {
+    void whenDeleteByInvalidIdThenGetFalse() {
         assertThat(sql2TicketRepository.deleteById(0)).isFalse();
     }
 
